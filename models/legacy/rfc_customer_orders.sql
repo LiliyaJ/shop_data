@@ -50,7 +50,7 @@ join (
     ) b
     on a.user_id = b.id
 
-    left outer join liliyaj-projects.dbt_stage.payment c
+    left outer join liliyaj-projects.dbt_stage.payments c
     on a.id = c.orderid
 
     where a.status NOT IN ('pending') and c.status != 'fail'
@@ -60,7 +60,7 @@ join (
 ) customer_order_history
 on orders.user_id = customer_order_history.customer_id
 
-left outer join liliyaj-projects.dbt_stage.payment payments
+left outer join liliyaj-projects.dbt_stage.payments payments
 on orders.id = payments.orderid
 
 where payments.status != 'fail'
