@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: shop-data
+    database: liliyaj-projects
+    schema: dbt_stage
+    tables:
+      - name: customers
+      - name: orders
+      - name: payments
