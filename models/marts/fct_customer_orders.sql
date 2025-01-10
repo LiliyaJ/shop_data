@@ -24,7 +24,7 @@ payments as (
 customer_order_history as (
 
     select 
-        customer_id,
+        customers.customer_id,
         full_name,
         surname,
         givenname,
@@ -58,17 +58,17 @@ customer_order_history as (
           when orders.order_status not in ('returned','return_pending') 
           then payments.payment_amount 
           else 0 
-          end)/nuiff(count(case 
+          end)/nullif(count(case 
             when orders.order_status not in ('returned','return_pending') 
             then 1 
             end),0) as avg_non_returned_order_value,
 
-        array_agg(distinct orders.oder_id) as order_ids
+        array_agg(distinct orders.order_id) as order_ids
 
     from orders
 
-    join cutomers
-    on orders.user_customer customers.customer_id
+    join customers
+    on orders.customer_id = customers.customer_id
 
     left outer join payments
     on orders.order_id = payments.order_id
@@ -81,8 +81,8 @@ customer_order_history as (
 
 
 final as (
-  
-select 
+    
+  select 
     orders.order_id,
     orders.customer_id,
     customers.surname,
@@ -93,22 +93,20 @@ select
     payments.payment_amount order_value_dollars,
     orders.order_status,
     payments.payment_status
-from orders
+  from orders
 
-join customers
-on orders.customer_id = customers.customer_id
+  join customers
+  on orders.customer_id = customers.customer_id
 
-join  customer_order_history
-on orders.customer_id = customer_order_history.customer_id
+  join  customer_order_history
+  on orders.customer_id = customer_order_history.customer_id
 
-left outer join payments
-on orders.order_id = payments.order_id
+  left outer join payments
+  on orders.order_id = payments.order_id
 
-where payments.payment_status != 'fail'
+  where payments.payment_status != 'fail'
 
 )
-
--- simple select statement
 
 select * from final
 
