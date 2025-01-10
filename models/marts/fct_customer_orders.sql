@@ -2,24 +2,24 @@ with
 
 orders as (
 
-  select * {{ ref('stg_shop__orders') }}
+  select * from {{ ref('stg_shop__orders') }}
 
 ),
 
 customers as (
 
-  select * {{ ref('stg_shop__customers') }}
+  select * from {{ ref('stg_shop__customers') }}
 
 ),
 
 payments as (
 
-  select * {{ ref('stg_shop__payments') }}
+  select * from {{ ref('stg_shop__payments') }}
 
 ),
 
 
--- logical CTEs
+-- logical CTE
 
 customer_order_history as (
 
@@ -37,7 +37,7 @@ customer_order_history as (
           end) as first_non_returned_order_date,
 
         max(case 
-          when orders.order_status NOT IN ('returned','return_pending') 
+          when orders.order_status not in ('returned','return_pending') 
           then order_date 
           end) as most_recent_non_returned_order_date,
 
@@ -49,13 +49,13 @@ customer_order_history as (
                   end),0) as non_returned_order_count,
 
         sum(case 
-          when orders.order_status NOT IN ('returned','return_pending') 
+          when orders.order_status not in ('returned','return_pending') 
           then payments.payment_amount 
           else 0 
           end) as total_lifetime_value,
 
         sum(case 
-          when orders.order_status NOT IN ('returned','return_pending') 
+          when orders.order_status not in ('returned','return_pending') 
           then payments.payment_amount 
           else 0 
           end)/nuiff(count(case 
@@ -63,41 +63,40 @@ customer_order_history as (
             then 1 
             end),0) as avg_non_returned_order_value,
 
-        array_agg(distinct order_idders.id) as order_ids
+        array_agg(distinct orders.oder_id) as order_ids
 
-    from orders orders
+    from orders
 
-    join cutomers customers
+    join cutomers
     on orders.user_customer customers.customer_id
 
     left outer join payments
-    on order_idders.id = payments.order_id
+    on orders.order_id = payments.order_id
 
-    where orders.order_status not in ('pending') and payments.status != 'fail'
+    where orders.order_status not in ('pending') and payments.payment_status != 'fail'
 
     group by customers.customer_id, customers.full_name, customers.surname, customers.givenname
 
 ),
 
 
--- marts
-
 final as (
+  
 select 
     orders.order_id,
     orders.customer_id,
     customers.surname,
     customers.givenname,
-    first_order_date,
-    order_count,
-    total_lifetime_value,
-    payment_amount order_value_dollars,
+    customer_order_history.first_order_date,
+    customer_order_history.order_count,
+    customer_order_history.total_lifetime_value,
+    payments.payment_amount order_value_dollars,
     orders.order_status,
     payments.payment_status
 from orders
 
 join customers
-on orders.user_customer customers.customer_id
+on orders.customer_id = customers.customer_id
 
 join  customer_order_history
 on orders.customer_id = customer_order_history.customer_id
@@ -105,7 +104,7 @@ on orders.customer_id = customer_order_history.customer_id
 left outer join payments
 on orders.order_id = payments.order_id
 
-where payments.status != 'fail'
+where payments.payment_status != 'fail'
 
 )
 
