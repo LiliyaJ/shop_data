@@ -2,7 +2,20 @@ with
 
 orders as (
 
-  select * from {{ ref('stg_shop__orders') }}
+  select 
+  *,
+    -- new vs returning customer
+    case  
+      when (
+      rank() over (
+      partition by customer_id
+      order by order_date, order_id
+      ) = 1
+    ) then 'new'
+    else 'return' end as nvsr,
+
+
+  from {{ ref('stg_shop__orders') }}
 
 ),
 

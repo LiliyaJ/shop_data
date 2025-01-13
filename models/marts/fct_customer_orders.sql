@@ -87,6 +87,7 @@ final as (
     surname,
     givenname,
     full_name,
+    nvsr,
     customer_first_order_date,
     customer_order_count
     customer_total_lifetime_value,
