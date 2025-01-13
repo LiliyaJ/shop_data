@@ -10,6 +10,8 @@ transformed as (
     id payment_id,
     orderid order_id,
     status payment_status,
+    PAYMENTMETHOD payment_method,
+    amount,
     round(amount/100.0,2) payment_amount
   from source
 
