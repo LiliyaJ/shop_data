@@ -72,7 +72,7 @@ add_avg_order_values as (
 
       *,
 
-      customer_total_lifetime_value / customer_non_returned_order_count customer_avg_non_returned_order_value
+      {{ customer_avg_non_returned_order_value('customer_total_lifetime_value', 'customer_non_returned_order_count') }} customer_avg_non_returned_order_value
 
     from customer_orders
 
