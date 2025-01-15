@@ -1,0 +1,9 @@
+exposures:
+  - name: customer_orders_data
+    type: notebook
+    maturity: high
+    #url:
+    depends_on:
+      - ref('fct_customer_orders')
+    owner:
+      name: Liliya Jeromin

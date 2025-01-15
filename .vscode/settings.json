@@ -1,3 +1,4 @@
 {
-  "dbt.dbtIntegration": "cloud"
+  "dbt.dbtIntegration": "cloud",
+  "dbt.enableNewLineagePanel": true
 }
