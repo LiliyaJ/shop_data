@@ -6,5 +6,5 @@ payments as(
 )
 
 select
-    sum(case when payment_status = 'success' then amount else 0) end successed_payments
+    sum(case when payment_status = 'success' then amount else 0 end) successed_payments
 from payments
