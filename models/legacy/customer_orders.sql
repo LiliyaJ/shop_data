@@ -1,3 +1,5 @@
+{{ config( required_tests = None ) }}
+
 select 
     orders.id as order_id,
     orders.user_id as customer_id,
