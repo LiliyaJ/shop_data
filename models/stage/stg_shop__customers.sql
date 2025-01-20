@@ -1,3 +1,4 @@
+{{ config( required_tests = None ) }}
 with 
 
 source as(
