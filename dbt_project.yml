@@ -25,3 +25,4 @@ models:
   playground:
     # Applies to all files under models/
     +materialized: table
+    +required_tests: { 'unique.*|not_null': 1 }
