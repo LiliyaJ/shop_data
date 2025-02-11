@@ -7,6 +7,7 @@ dbt-cloud:
   project-id: 70471823406633
 
 # This setting configures which "profile" dbt uses for this project.
+# testing cync with github
 profile: 'default'
 
 model-paths: ['models']
